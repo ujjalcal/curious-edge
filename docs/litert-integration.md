@@ -14,7 +14,7 @@ Load a SKILL.md file and inject its content into the system prompt:
 import litert_lm
 
 # Load the skill
-with open("skills/ai-slop-detector.SKILL.md") as f:
+with open("skills/ai-slop-detector/SKILL.md") as f:
     skill_content = f.read()
 
 # Strip YAML frontmatter, keep instructions + output contract
@@ -85,7 +85,7 @@ response = session.chat("Review this article for quality issues: ...")
 For Android apps using LiteRT-LM:
 
 ```kotlin
-val skillContent = assets.open("skills/full-review.SKILL.md")
+val skillContent = assets.open("skills/full-review/SKILL.md")
     .bufferedReader().readText()
 
 val session = LiteRtLmSession.Builder()
@@ -105,7 +105,7 @@ import litert_lm
 from pathlib import Path
 
 # Load skill
-with open("skills/readability-scorer.SKILL.md") as f:
+with open("skills/readability-scorer/SKILL.md") as f:
     skill = f.read()
 
 session = litert_lm.Session(

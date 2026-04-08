@@ -13,79 +13,271 @@ Converted [curious-stack](https://github.com/anthropics/curious-stack) quality-a
 | Tone Analyzer | [`skills/tone-analyzer/`](skills/tone-analyzer/) | Analyze writing tone and consistency |
 | Readability Scorer | [`skills/readability-scorer/`](skills/readability-scorer/) | Score readability and suggest simplifications |
 
-## How to Use
+## Quick Start
 
-### Import into Google AI Edge Gallery
+### 1. Install Google AI Edge Gallery
 
-Each skill lives in its own folder containing a `SKILL.md` file, matching the Gallery's expected directory structure.
+- **Android**: [Google Play Store](https://play.google.com/store/apps/details?id=com.google.ai.edge.gallery)
+- **iOS**: [App Store](https://apps.apple.com/us/app/google-ai-edge-gallery/id6749645337) (requires iOS 17+)
 
-**From URL** -- In the Gallery app, go to Agent Skills > tap **+** > choose **Load from URL** and paste the GitHub Pages URL for the skill folder (the app appends `/SKILL.md` automatically):
+### 2. Download a model
 
-```
-https://ujjalcal.github.io/curious-edge/skills/ai-slop-detector
-```
+Open the app and download **Gemma 4 E2B** (faster, 2B params) or **Gemma 4 E4B** (better reasoning, 4B params).
 
-All skill URLs:
-- **AI Slop Detector**: `https://ujjalcal.github.io/curious-edge/skills/ai-slop-detector`
-- **Full Review**: `https://ujjalcal.github.io/curious-edge/skills/full-review`
-- **Claim Checker**: `https://ujjalcal.github.io/curious-edge/skills/claim-checker`
-- **Jargon Detector**: `https://ujjalcal.github.io/curious-edge/skills/jargon-detector`
-- **Tone Analyzer**: `https://ujjalcal.github.io/curious-edge/skills/tone-analyzer`
-- **Readability Scorer**: `https://ujjalcal.github.io/curious-edge/skills/readability-scorer`
+### 3. Import a skill
 
-> **Note**: These use GitHub Pages (`github.io`), not `raw.githubusercontent.com`. The iOS Gallery app requires GitHub Pages URLs. A `.nojekyll` file in the repo root prevents Jekyll from converting the markdown files.
+Go to **Agent Skills** > tap **+** > choose **Load from URL** and paste any URL below:
 
-**Local import** -- Download a `SKILL.md` file and import it via **Import local file** in the Gallery app.
+| Skill | Import URL |
+|-------|------------|
+| AI Slop Detector | `https://ujjalcal.github.io/curious-edge/skills/ai-slop-detector` |
+| Full Review | `https://ujjalcal.github.io/curious-edge/skills/full-review` |
+| Claim Checker | `https://ujjalcal.github.io/curious-edge/skills/claim-checker` |
+| Jargon Detector | `https://ujjalcal.github.io/curious-edge/skills/jargon-detector` |
+| Tone Analyzer | `https://ujjalcal.github.io/curious-edge/skills/tone-analyzer` |
+| Readability Scorer | `https://ujjalcal.github.io/curious-edge/skills/readability-scorer` |
 
-**Natural invocation** -- Chat naturally (e.g. "Check this text for AI slop") or reference the skill by name.
+### 4. Use naturally
 
-### Requirements
+Chat naturally -- e.g., "Check this text for AI slop" or paste text and ask for a review. The model reads skill descriptions and invokes the right one automatically.
 
-- Google AI Edge Gallery app ([Android](https://play.google.com/store/apps/details?id=com.google.ai.edge.gallery) / iOS)
-- Gemma 4 E2B or E4B model downloaded in-app
-
-### Advanced: LiteRT-LM CLI / SDK
-
-For programmatic use, load these skills as system-prompt extensions with LiteRT-LM's tool-calling support. See [`docs/litert-integration.md`](docs/litert-integration.md) for details.
-
-## Skill Format
-
-Each `SKILL.md` follows the [Gallery Agent Skill specification](https://github.com/google-ai-edge/gallery/tree/main/skills):
-
-```
 ---
-name: skill-name
-description: What the skill does and when to use it.
+
+## Building Your Own Skills
+
+### Skill Types
+
+The Gallery supports three types of skills:
+
+| Type | Files Required | Use Case |
+|------|---------------|----------|
+| **Text-only** | `SKILL.md` only | Persona, analysis, writing tasks -- no external calls |
+| **JavaScript** | `SKILL.md` + `scripts/index.html` | API calls, computation, interactive webviews |
+| **Native** | `SKILL.md` with `run_intent` | OS-level actions (email, SMS) |
+
+Text-only skills are the simplest and most portable. That's what all the skills in this repo are.
+
+### Directory Structure
+
+Each skill lives in its own kebab-case folder with a `SKILL.md` file:
+
+```
+your-repo/
+├── .nojekyll              # Required for GitHub Pages (prevents Jekyll processing)
+├── skills/
+│   ├── my-skill/
+│   │   └── SKILL.md       # Required -- the skill definition
+│   ├── my-js-skill/
+│   │   ├── SKILL.md
+│   │   └── scripts/
+│   │       └── index.html  # JS entry point (for JS skills only)
+│   └── another-skill/
+│       └── SKILL.md
+```
+
+### SKILL.md Format
+
+The file has two parts separated by `---` delimiters: **frontmatter** (metadata) and **instructions** (what the model follows).
+
+```markdown
+---
+name: my-skill-name
+description: What this skill does. Include when to trigger it.
 ---
 
 # Skill Title
 
 ## Instructions
-<full analysis instructions>
+Tell the model what to do, step by step.
 
 ## Output Format
-<structured output format>
+Define the exact structure you want in responses.
 
 ---
 ```
 
-Key format rules:
-- Frontmatter must have exactly two `---` delimiters (opening and closing)
-- Only `name` and `description` are required in frontmatter
-- Description should include trigger conditions (when to invoke the skill)
-- Trailing `---` at end of file closes the skill definition
-- Each skill must be in its own kebab-case directory with a `SKILL.md` file
+### Frontmatter Fields
 
-## Adapting More Skills
+| Field | Required | Description |
+|-------|----------|-------------|
+| `name` | Yes | Kebab-case identifier (e.g., `ai-slop-detector`) |
+| `description` | Yes | What the skill does + when to invoke it. The model uses this to decide whether to activate the skill. |
+| `metadata.require-secret` | No | Set to `true` if the skill needs an API key |
+| `metadata.require-secret-description` | No | Instructions for getting the API key |
+| `metadata.homepage` | No | URL -- makes the skill name clickable in the app |
 
-To convert additional curious-stack skills:
+**Do NOT include** `version`, `author`, or `tags` -- the parser ignores them. Keep frontmatter simple.
 
-1. Create a new folder in `skills/` using kebab-case
-2. Add a `SKILL.md` with simple frontmatter (`name` + `description`)
-3. Put trigger conditions in the `description` field
-4. Include full instructions and output format
-5. End the file with `---`
-6. Test in Gallery with sample text
+### How the Parser Works
+
+The Gallery app (both Android and iOS) parses `SKILL.md` by splitting on `---`:
+
+```
+parts = content.split("---")
+// parts[0] = "" (empty, before first ---)
+// parts[1] = frontmatter (name, description)
+// parts[2+] = instructions (rejoined with --- if your instructions contain horizontal rules)
+```
+
+The parser requires **at least two `---` lines** (producing 3+ parts). If it finds fewer, you get:
+
+> Error parsing SKILL.md: Invalid format: Expected at least two '---' sections.
+
+The `description` field is appended to the model's system prompt so it can decide when to invoke the skill automatically.
+
+### Writing Good Descriptions
+
+The `description` field is critical -- it's how the model decides whether to invoke your skill. Include:
+
+- **What it does**: "Detect AI-generated filler, cliches, and low-effort writing patterns."
+- **When to trigger**: "Use when the user asks to check text for AI slop, generic writing, boilerplate, or wants to improve originality."
+
+Bad: `description: A writing tool.`
+Good: `description: Detect AI-generated filler, cliches, and low-effort writing patterns. Use when the user asks to check text for AI slop, generic writing, boilerplate, or wants to improve originality.`
+
+### Writing Instructions for On-Device Models
+
+Gemma 4 E2B/E4B are capable but smaller than cloud models. Keep instructions effective:
+
+- **Be direct**: State the task clearly up front. Avoid preamble.
+- **Use structured output**: Define exact headings, labels, and formats. The model follows structure better than open-ended prose.
+- **Avoid markdown code fences in output templates**: Use bold labels and plain markdown instead of nested fenced blocks. On-device models handle plain formatting more reliably.
+- **Keep output concise**: Every output token costs inference time. Request only what's needed -- verdict, evidence, one fix. Not five paragraphs of analysis.
+- **One skill = one job**: Don't combine multiple analysis types into a single skill. The model performs better with focused instructions.
+
+---
+
+## Deploying Skills
+
+### Option 1: GitHub Pages (Recommended)
+
+This is the only method that works reliably on both Android and iOS.
+
+**Setup:**
+
+1. Create a public GitHub repo
+2. Add a `.nojekyll` file in the repo root (empty file -- prevents Jekyll from converting `.md` to `.html`)
+3. Put each skill in `skills/<skill-name>/SKILL.md`
+4. Enable GitHub Pages: **Settings > Pages > Deploy from branch > `main` / `/ (root)` > Save**
+5. Wait 1-2 minutes for deployment
+
+**Import URL format:**
+```
+https://<username>.github.io/<repo>/skills/<skill-name>
+```
+
+The app appends `/SKILL.md` automatically.
+
+### Option 2: Any Web Server
+
+Host the skill folder on any static file server (Cloudflare Pages, Netlify, your own server). The URL must serve the raw `SKILL.md` markdown file at `<base-url>/SKILL.md`.
+
+### Option 3: Local Import (Android only)
+
+Push the skill folder to your device via `adb`:
+
+```bash
+adb push my-skill/ /sdcard/Download/my-skill/
+```
+
+Then in the app: **Skills > + > Import local skill** and select the folder.
+
+### What Does NOT Work
+
+| URL Format | Works? | Why |
+|-----------|--------|-----|
+| `https://<user>.github.io/<repo>/skills/<skill>` | Yes | GitHub Pages serves raw markdown |
+| `https://raw.githubusercontent.com/...` | Android only | iOS Gallery app fails to parse -- likely fetches folder URL first, gets 404 |
+| `https://github.com/<user>/<repo>/tree/...` | No | Returns HTML page, not raw markdown |
+| Branch names with `/` (e.g., `feature/my-branch`) | Unreliable | Can confuse URL parsing on some clients |
+
+---
+
+## Performance Tips
+
+### Model Selection
+
+| Model | Speed | Quality | Best For |
+|-------|-------|---------|----------|
+| **Gemma 4 E2B** | Fast | Good for straightforward tasks | jargon-detector, readability-scorer, ai-slop-detector |
+| **Gemma 4 E4B** | Slower | Better reasoning and nuance | claim-checker, tone-analyzer, full-review |
+
+### Speed Optimization
+
+1. **Disable unused skills**: Each enabled skill adds to the system prompt. Disable skills you're not using in **Manage Skills** to reduce prompt size and speed up responses.
+2. **Keep input text short**: On-device inference is token-bound. Shorter input = faster analysis.
+3. **Design concise output formats**: Verbose output contracts mean more tokens to generate. Request only essential fields.
+4. **Chunk long documents**: For texts over ~1000 words, analyze sections separately rather than the full document at once.
+
+### Known Quirks
+
+- **JS skill hallucination**: Smaller models (E2B) may try to call `run_js` with `index.html` even for text-only skills, mimicking the built-in JS skill pattern. If this happens, the call fails and the model usually falls back to text-based analysis. E4B handles this better.
+- **Output format drift**: On-device models may not perfectly follow complex output templates every time. Simpler formats produce more consistent results.
+- **Context constraints**: Mobile hardware limits context length. Very long skills + long input text can degrade output quality.
+
+---
+
+## Advanced: LiteRT-LM SDK Integration
+
+For programmatic use outside the Gallery app, see [`docs/litert-integration.md`](docs/litert-integration.md). Covers:
+
+- System prompt injection (Python, Kotlin)
+- Tool calling / function calling
+- Batch processing across multiple files
+- Temperature and chunking recommendations
+
+---
+
+## Adapting Existing Skills
+
+To convert skills from other systems (Claude Code, Cursor, etc.) into Gallery format:
+
+1. **Create the folder**: `skills/<skill-name>/SKILL.md`
+2. **Add frontmatter**: Just `name` + `description` between `---` delimiters
+3. **Move trigger conditions into `description`**: The Gallery uses the description for skill selection, not a separate "When to Use" section (though you can keep one in the instructions too)
+4. **Simplify output format**: Remove markdown code fences from output templates. Use bold labels and plain structure instead.
+5. **End with `---`**: Add a trailing `---` at the end of the file
+6. **Deploy via GitHub Pages**: Enable Pages, add `.nojekyll`, push
+7. **Test**: Import in the Gallery app and try with sample input
+
+### Converting from Claude Code / Cursor Skills
+
+Claude-style skills typically have:
+- A trigger section ("When to use")
+- Detailed persona/instructions
+- A structured output contract
+
+Map these to Gallery format:
+- Trigger conditions -> `description` field in frontmatter
+- Persona + instructions -> `## Instructions` section
+- Output contract -> `## Output Format` section (simplified, no fenced blocks)
+
+---
+
+## Repository Structure
+
+```
+curious-edge/
+├── .nojekyll                           # Prevents Jekyll processing on GitHub Pages
+├── README.md                           # This file
+├── docs/
+│   └── litert-integration.md           # LiteRT-LM SDK usage guide
+└── skills/
+    ├── ai-slop-detector/SKILL.md       # Detect AI filler and cliches
+    ├── full-review/SKILL.md            # Comprehensive writing review
+    ├── claim-checker/SKILL.md          # Fact-check claims
+    ├── jargon-detector/SKILL.md        # Flag jargon, suggest alternatives
+    ├── tone-analyzer/SKILL.md          # Analyze tone and consistency
+    └── readability-scorer/SKILL.md     # Grade-level scoring
+```
+
+## References
+
+- [Google AI Edge Gallery repo](https://github.com/google-ai-edge/gallery)
+- [Gallery Skills README](https://github.com/google-ai-edge/gallery/tree/main/skills)
+- [Gallery Skills Discussions](https://github.com/google-ai-edge/gallery/discussions/categories/skills) (community skills)
+- [Gemma 4 blog post](https://developers.googleblog.com/bring-state-of-the-art-agentic-skills-to-the-edge-with-gemma-4/)
+- [Android parser source (SkillManagerViewModel.kt)](https://github.com/google-ai-edge/gallery/blob/main/Android/src/app/src/main/java/com/google/ai/edge/gallery/customtasks/agentchat/SkillManagerViewModel.kt)
 
 ## License
 
