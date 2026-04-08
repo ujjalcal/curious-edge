@@ -235,6 +235,7 @@ Tested the `ai-slop-detector` skill with AI-generated "listicle slop" articles (
 - **Output format drift**: On-device models may not perfectly follow complex output templates every time. Simpler formats produce more consistent results.
 - **Context constraints**: Mobile hardware limits context length. Very long skills + long input text can hang the app or degrade output quality.
 - **Generous verdicts**: E2B tends to rate slop as MODERATE when it should be HEAVY or PURE SLOP. The model is polite. E4B provides more honest assessments.
+- **Device thermals**: Even with a small model (E2B), short prompts, and a single lightweight text-only skill, the device gets noticeably hot. Tested on iPhone 17 over 5G. On-device LLM inference is GPU-intensive and will heat up the phone quickly. Expect thermal throttling during extended use, which further slows response times.
 
 ---
 
