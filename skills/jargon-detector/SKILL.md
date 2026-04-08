@@ -1,27 +1,11 @@
 ---
 name: jargon-detector
-description: Identify unnecessary jargon, buzzwords, and complex terminology, then suggest plain-language alternatives
-version: 1.0.0
-author: curious-stack
-tags:
-  - writing
-  - clarity
-  - plain-language
-  - accessibility
+description: Identify unnecessary jargon, buzzwords, and complex terminology, then suggest plain-language alternatives. Use when the user asks to simplify language or make text more accessible.
 ---
 
-# When to Use
+# Jargon Detector
 
-Use this skill when:
-- The user asks to simplify language or remove jargon
-- The user wants to make text more accessible to a general audience
-- The user asks "is this too technical?", "simplify this", or "make this clearer"
-- The user mentions plain language, readability, or accessibility concerns
-- The user is preparing content for a non-specialist audience
-
-Do NOT use when the user specifically wants technical depth or is writing for an expert audience that expects domain terminology.
-
-# Instructions
+## Instructions
 
 You are a plain-language expert who helps writers communicate clearly without sacrificing accuracy. Your goal is to flag jargon that creates unnecessary barriers to understanding.
 
@@ -71,42 +55,40 @@ NOT all technical terms are jargon. Terms are justified when:
 - **HEAVY**: Dense with jargon. Difficult for non-specialists.
 - **OPAQUE**: Impenetrable to anyone outside the specific domain.
 
-# Output Contract
+## Output Format
 
 Your response MUST follow this exact structure:
 
-```
-## Verdict: [CLEAR | MILD | MODERATE | HEAVY | OPAQUE]
+**Verdict**: [CLEAR | MILD | MODERATE | HEAVY | OPAQUE]
 
-## Jargon Found
+**Jargon Found**:
 
-### Term 1: "[exact term or phrase]"
-- **Type**: [Technical Term | Buzzword | Acronym | Nominalization]
-- **Context**: "[sentence where it appears]"
-- **Plain alternative**: [simpler replacement]
-- **Justified?**: [Yes/No -- and why]
+Term 1: "[exact term or phrase]"
+- Type: [Technical Term | Buzzword | Acronym | Nominalization]
+- Context: "[sentence where it appears]"
+- Plain alternative: [simpler replacement]
+- Justified?: [Yes/No -- and why]
 
-### Term 2: "[exact term or phrase]"
-- **Type**: [type]
-- **Context**: "[sentence]"
-- **Plain alternative**: [replacement]
-- **Justified?**: [Yes/No]
+Term 2: "[exact term or phrase]"
+- Type: [type]
+- Context: "[sentence]"
+- Plain alternative: [replacement]
+- Justified?: [Yes/No]
 
-[Continue for all detected jargon]
+(Continue for all detected jargon)
 
-## Jargon Density: [X]%
-(Approximate percentage of sentences containing unnecessary jargon)
+**Jargon Density**: [X]% (Approximate percentage of sentences containing unnecessary jargon)
 
-## Before/After Example
-**Before**: "[Original sentence with most jargon]"
-**After**: "[Rewritten in plain language]"
+**Before/After Example**:
+- Before: "[Original sentence with most jargon]"
+- After: "[Rewritten in plain language]"
 
-## Recommendations
-[Prioritized list of changes to improve accessibility]
-```
+**Recommendations**: [Prioritized list of changes to improve accessibility]
 
 Rules:
 - Always quote the exact jargon in context.
 - Always provide a specific plain-language alternative, not just "simplify this."
 - Acknowledge when a technical term IS justified -- don't flag everything.
 - The Before/After example must be a real sentence from the text, fully rewritten.
+
+---

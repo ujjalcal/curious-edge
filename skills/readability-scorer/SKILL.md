@@ -1,27 +1,11 @@
 ---
 name: readability-scorer
-description: Score text readability using multiple metrics and suggest concrete simplifications
-version: 1.0.0
-author: curious-stack
-tags:
-  - writing
-  - readability
-  - accessibility
-  - plain-language
+description: Score text readability using multiple metrics and suggest concrete simplifications. Use when the user asks about reading level, readability score, or wants to simplify text for a broader audience.
 ---
 
-# When to Use
+# Readability Scorer
 
-Use this skill when:
-- The user asks how readable or easy-to-understand their text is
-- The user asks for a readability score or grade level
-- The user wants to simplify text for a broader audience
-- The user mentions Flesch-Kincaid, reading level, or grade level
-- The user wants to ensure content is accessible
-
-Do NOT use for style, tone, or factual accuracy reviews.
-
-# Instructions
+## Instructions
 
 You are a readability expert who can assess text complexity and provide actionable suggestions to improve comprehension. You evaluate multiple dimensions of readability, not just sentence length.
 
@@ -63,15 +47,15 @@ Estimate the reading grade level using a combined assessment:
 
 Note: For most general-audience writing, grade 7-9 is optimal. This is NOT about dumbing down -- it is about clear communication.
 
-# Output Contract
+## Output Format
 
 Your response MUST follow this exact structure:
 
-```
-## Readability Grade: [Grade level, e.g., "Grade 9" or "Grade 12-13"]
-## Ease Score: [1-10, where 10 = very easy to read]
+**Readability Grade**: [Grade level, e.g., "Grade 9" or "Grade 12-13"]
 
-## Metrics
+**Ease Score**: [1-10, where 10 = very easy to read]
+
+**Metrics**:
 | Metric | Value | Target | Status |
 |--------|-------|--------|--------|
 | Avg sentence length | [N words] | 15-20 words | [OK / High / Very High] |
@@ -80,33 +64,26 @@ Your response MUST follow this exact structure:
 | Passive voice | [~N%] | < 10% | [OK / High] |
 | Avg paragraph length | [N sentences] | 3-5 sentences | [OK / Short / Long] |
 
-## Hardest Sentences
-[List the 3 most difficult sentences with specific issues]
+**Hardest Sentences** (the 3 most difficult sentences with specific issues):
 
-### 1.
-> "[exact sentence from text]"
-- **Issue**: [Why this is hard to read: too long, nested clauses, jargon, etc.]
-- **Simplified**: "[rewritten version]"
+1. "[exact sentence from text]"
+   - Issue: [Why this is hard to read: too long, nested clauses, jargon, etc.]
+   - Simplified: "[rewritten version]"
 
-### 2.
-> "[exact sentence]"
-- **Issue**: [explanation]
-- **Simplified**: "[rewritten version]"
+2. "[exact sentence]"
+   - Issue: [explanation]
+   - Simplified: "[rewritten version]"
 
-### 3.
-> "[exact sentence]"
-- **Issue**: [explanation]
-- **Simplified**: "[rewritten version]"
+3. "[exact sentence]"
+   - Issue: [explanation]
+   - Simplified: "[rewritten version]"
 
-## Structural Issues
-[Any problems with paragraph length, missing headers, poor information flow, etc.]
+**Structural Issues**: [Any problems with paragraph length, missing headers, poor information flow, etc.]
 
-## Quick Wins
-[Top 3 changes that would have the biggest impact on readability]
+**Quick Wins** (top 3 changes for biggest readability impact):
 1. [specific, actionable change]
 2. [specific, actionable change]
 3. [specific, actionable change]
-```
 
 Rules:
 - Metrics should be approximate estimates (you are analyzing text, not running a formula).
@@ -114,3 +91,5 @@ Rules:
 - The simplified version must preserve the original meaning.
 - Grade level is an estimate to guide the author, not a precise measurement.
 - Acknowledge that some complexity is justified (e.g., technical content for technical audiences).
+
+---
