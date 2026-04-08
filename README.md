@@ -19,19 +19,21 @@ Converted [curious-stack](https://github.com/anthropics/curious-stack) quality-a
 
 Each skill lives in its own folder containing a `SKILL.md` file, matching the Gallery's expected directory structure.
 
-**From URL** -- In the Gallery app, go to Agent Skills > tap **+** > choose **Load from URL** and paste the URL to the skill folder. Use the raw GitHub URL pointing to the folder, for example:
+**From URL** -- In the Gallery app, go to Agent Skills > tap **+** > choose **Load from URL** and paste the GitHub Pages URL for the skill folder (the app appends `/SKILL.md` automatically):
 
 ```
-https://raw.githubusercontent.com/ujjalcal/curious-edge/claude/convert-skills-gallery-65Yw9/skills/ai-slop-detector/SKILL.md
+https://ujjalcal.github.io/curious-edge/skills/ai-slop-detector
 ```
 
 All skill URLs:
-- **AI Slop Detector**: `https://raw.githubusercontent.com/ujjalcal/curious-edge/claude/convert-skills-gallery-65Yw9/skills/ai-slop-detector/SKILL.md`
-- **Full Review**: `https://raw.githubusercontent.com/ujjalcal/curious-edge/claude/convert-skills-gallery-65Yw9/skills/full-review/SKILL.md`
-- **Claim Checker**: `https://raw.githubusercontent.com/ujjalcal/curious-edge/claude/convert-skills-gallery-65Yw9/skills/claim-checker/SKILL.md`
-- **Jargon Detector**: `https://raw.githubusercontent.com/ujjalcal/curious-edge/claude/convert-skills-gallery-65Yw9/skills/jargon-detector/SKILL.md`
-- **Tone Analyzer**: `https://raw.githubusercontent.com/ujjalcal/curious-edge/claude/convert-skills-gallery-65Yw9/skills/tone-analyzer/SKILL.md`
-- **Readability Scorer**: `https://raw.githubusercontent.com/ujjalcal/curious-edge/claude/convert-skills-gallery-65Yw9/skills/readability-scorer/SKILL.md`
+- **AI Slop Detector**: `https://ujjalcal.github.io/curious-edge/skills/ai-slop-detector`
+- **Full Review**: `https://ujjalcal.github.io/curious-edge/skills/full-review`
+- **Claim Checker**: `https://ujjalcal.github.io/curious-edge/skills/claim-checker`
+- **Jargon Detector**: `https://ujjalcal.github.io/curious-edge/skills/jargon-detector`
+- **Tone Analyzer**: `https://ujjalcal.github.io/curious-edge/skills/tone-analyzer`
+- **Readability Scorer**: `https://ujjalcal.github.io/curious-edge/skills/readability-scorer`
+
+> **Note**: These use GitHub Pages (`github.io`), not `raw.githubusercontent.com`. The iOS Gallery app requires GitHub Pages URLs. A `.nojekyll` file in the repo root prevents Jekyll from converting the markdown files.
 
 **Local import** -- Download a `SKILL.md` file and import it via **Import local file** in the Gallery app.
 
