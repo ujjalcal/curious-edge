@@ -202,18 +202,39 @@ Then in the app: **Skills > + > Import local skill** and select the folder.
 | **Gemma 4 E2B** | Fast | Good for straightforward tasks | jargon-detector, readability-scorer, ai-slop-detector |
 | **Gemma 4 E4B** | Slower | Better reasoning and nuance | claim-checker, tone-analyzer, full-review |
 
+### Input Length Limits
+
+Tested with articles of varying length on Gemma 4 E2B (iPhone, 5G):
+
+| Input Length | Result |
+|-------------|--------|
+| ~250 words | Works well. Analysis completes, output follows format. |
+| ~600 words | App hung / unresponsive. Too many tokens for E2B to process + generate structured output. |
+
+**Recommendation**: Keep input under ~300 words for E2B. E4B may handle longer inputs but will be slower.
+
 ### Speed Optimization
 
 1. **Disable unused skills**: Each enabled skill adds to the system prompt. Disable skills you're not using in **Manage Skills** to reduce prompt size and speed up responses.
-2. **Keep input text short**: On-device inference is token-bound. Shorter input = faster analysis.
+2. **Keep input text short**: On-device inference is token-bound. Shorter input = faster analysis. ~250 words is the sweet spot for E2B.
 3. **Design concise output formats**: Verbose output contracts mean more tokens to generate. Request only essential fields.
-4. **Chunk long documents**: For texts over ~1000 words, analyze sections separately rather than the full document at once.
+4. **Chunk long documents**: For texts over ~300 words, analyze sections separately rather than the full document at once.
+
+### Real-World Test Results
+
+Tested the `ai-slop-detector` skill with AI-generated "listicle slop" articles (the kind of "7 Ways AI Will Change [X]" content that's everywhere):
+
+- **E2B correctly identified**: hollow intensifiers ("mind-blowing"), AI cliche patterns ("invades every corner of daily life"), formulaic listicle structure, and generic conclusions
+- **E2B missed**: cross-article pattern recognition (identical template reused for coffee/toothbrush/shower articles), the recycled "it achieves sentience" joke used as a punchline in every article, and that zero claims were verifiable
+- **Verdict accuracy**: E2B rated obvious slop as MODERATE instead of PURE SLOP -- smaller models tend to be too generous. E4B is expected to be harsher and more accurate.
+- **Output truncation**: Responses sometimes cut off mid-sentence due to output token limits. Shorter output formats help.
 
 ### Known Quirks
 
 - **JS skill hallucination**: Smaller models (E2B) may try to call `run_js` with `index.html` even for text-only skills, mimicking the built-in JS skill pattern. If this happens, the call fails and the model usually falls back to text-based analysis. E4B handles this better.
 - **Output format drift**: On-device models may not perfectly follow complex output templates every time. Simpler formats produce more consistent results.
-- **Context constraints**: Mobile hardware limits context length. Very long skills + long input text can degrade output quality.
+- **Context constraints**: Mobile hardware limits context length. Very long skills + long input text can hang the app or degrade output quality.
+- **Generous verdicts**: E2B tends to rate slop as MODERATE when it should be HEAVY or PURE SLOP. The model is polite. E4B provides more honest assessments.
 
 ---
 
